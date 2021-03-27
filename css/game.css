@@ -1,0 +1,85 @@
+.scoreline {
+	width: 90%;
+	margin: 0 auto;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+h5 {
+	font-size: 3rem;
+}
+h3 {
+	font-size: 5rem;
+	margin-top: -10px;
+}
+h4 {
+	font-size: 3.3rem;
+}
+.progress__border {
+	min-width: 100px;
+	border: 1px solid rgb(237, 237, 237);
+	border-radius: 5px;
+}
+.progress__border-color {
+	border-radius: 5px;
+	background-color: rgb(149, 144, 255);
+}
+.card {
+	width: 90%;
+	margin: 0 auto;
+	border-radius: 8px;
+	background-color: rgba(255, 255, 255, 0.1);
+	padding: 40px 0;
+}
+.card__question {
+	margin-bottom: 15px;
+}
+.card__answer {
+	width: 80%;
+	margin: 0 auto;
+	margin-bottom: 10px;
+	font-size: 1.8rem;
+	text-align: left;
+	background-color: #fff;
+	color: #333;
+	cursor: pointer;
+	transition: all 0.3s ease-in-out;
+	border-radius: 5px;
+}
+@media screen and (max-width: 568px) {
+	.card,
+	.card__answer {
+		width: 95%;
+	}
+}
+.card__answer span {
+	display: inline-block;
+	color: #fff;
+	font-size: 2.2rem;
+	margin-right: 7px;
+	background-color: rgb(149, 144, 255);
+	padding: 10px 15px;
+	border-radius: 5px 0 0px 5px;
+	transition: all 0.3s ease-in-out;
+}
+.card__answer:hover {
+	background-color: #e6e6e6;
+}
+.card__answer:hover span {
+	background-color: rgb(138, 131, 255);
+}
+.card__answer.active span {
+	background-color: rgb(34, 123, 206);
+}
+.card__answer.correct {
+	color: #fff;
+	background-color: rgb(19, 145, 19);
+}
+.card__answer.wrong {
+	color: #fff;
+	background-color: rgb(225, 22, 22);
+}
+.btn-grad {
+	margin-top: 20px;
+	cursor: pointer;
+}
