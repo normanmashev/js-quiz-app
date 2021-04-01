@@ -10,6 +10,12 @@
 	margin: 0;
 }
 
+html,
+body {
+	height: 100vh;
+	width: 100vw;
+}
+
 body {
 	background-color: #8bc6ec;
 	background-image: linear-gradient(135deg, #8bc6ec 0%, #9599e2 100%);
@@ -18,7 +24,7 @@ body {
 }
 /* MAIN STYLES */
 .wrapper {
-	height: 100vh;
+	height: 100%;
 	width: 100vw;
 	max-width: 80rem;
 	margin: 0 auto;
@@ -27,10 +33,28 @@ body {
 	justify-content: center;
 	align-items: center;
 	text-align: center;
+	/* overflow: scroll; */
+}
+
+@media screen and (max-width: 576px) {
+	.wrapper {
+		justify-content: space-around;
+	}
 }
 
 .wrapper > * {
 	width: 100%;
+}
+
+.main {
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	overflow: scroll;
+	/* background-color: #8bc6ec;
+	background-image: linear-gradient(135deg, #8bc6ec 0%, #9599e2 100%);
+	background-size: auto; */
 }
 
 .flex {
@@ -73,9 +97,9 @@ h1 {
 .btn-grad {
 	background-image: linear-gradient(
 		to right,
-		#b993d6 0%,
-		#8ca6db 51%,
-		#b993d6 100%
+		#4776e6 0%,
+		#8e54e9 51%,
+		#4776e6 100%
 	);
 }
 .btn-grad {
@@ -92,6 +116,7 @@ h1 {
 	background-size: 200% auto;
 	border-radius: 10px;
 	transition: all 0.5s ease-in-out;
+	cursor: pointer;
 }
 
 .btn-grad:hover {

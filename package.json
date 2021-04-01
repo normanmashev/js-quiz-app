@@ -1,0 +1,25 @@
+{
+  "name": "quiz-app",
+  "version": "1.0.0",
+  "description": "Vanilla JS Quiz Application with Open Trivia Database API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/normanmashev/js-quiz-app.git"
+  },
+  "keywords": [
+    "vanillajs",
+    "js",
+    "quiz",
+    "opendb"
+  ],
+  "author": "Nariman Imashev <imashnariman@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/normanmashev/js-quiz-app/issues"
+  },
+  "homepage": "https://github.com/normanmashev/js-quiz-app#readme"
+}

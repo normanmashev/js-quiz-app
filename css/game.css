@@ -29,7 +29,7 @@ h4 {
 	margin: 0 auto;
 	border-radius: 8px;
 	background-color: rgba(255, 255, 255, 0.1);
-	padding: 40px 0;
+	padding: 40px 5px;
 }
 .card__question {
 	margin-bottom: 15px;
@@ -54,6 +54,7 @@ h4 {
 }
 .card__answer span {
 	display: inline-block;
+	height: 100%;
 	color: #fff;
 	font-size: 2.2rem;
 	margin-right: 7px;
@@ -68,18 +69,190 @@ h4 {
 .card__answer:hover span {
 	background-color: rgb(138, 131, 255);
 }
+.card__answer.active {
+	box-shadow: 0 0 30px rgb(175, 95, 255);
+}
 .card__answer.active span {
 	background-color: rgb(34, 123, 206);
+}
+.card__answer.active.wrong {
+	animation: shake 1s linear;
 }
 .card__answer.correct {
 	color: #fff;
 	background-color: rgb(19, 145, 19);
+	transform: scale(1.03);
+	box-shadow: 0 0 20px rgb(106, 77, 121);
 }
 .card__answer.wrong {
 	color: #fff;
 	background-color: rgb(225, 22, 22);
 }
+.card__answer.invisible {
+	transition: opacity 0.5s ease;
+	opacity: 0;
+	pointer-events: none;
+}
+/* BUTTONS */
+.options {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 60%;
+	margin: 20px auto 0;
+}
+@media screen and (min-width: 576px) and (max-width: 768px) {
+	.options {
+		width: 90%;
+	}
+}
+@media screen and (max-width: 575.98px) {
+	.options {
+		width: 100%;
+	}
+}
 .btn-grad {
-	margin-top: 20px;
+	margin: 0;
+}
+.btn-option.not-available {
+	background-image: linear-gradient(
+		to right,
+		#b993d6 0%,
+		#8ca6db 51%,
+		#b993d6 100%
+	);
+	pointer-events: none;
+}
+.btn-option.available {
+	background-image: linear-gradient(
+		to right,
+		#4776e6 0%,
+		#8e54e9 51%,
+		#4776e6 100%
+	);
+}
+.btn-option {
+	display: inline-block;
+	padding: 10px 0;
+	font-weight: 700;
+	font-size: 1.1rem;
+	text-align: center;
+	text-transform: uppercase;
+	transition: 0.5s;
+	background-size: 200% auto;
+	color: #fff;
+	border-radius: 10px;
 	cursor: pointer;
+	min-width: 50px;
+}
+
+.btn-option.available:hover {
+	background-position: right center; /* change the direction of the change here */
+	box-shadow: 0 0 20px #eee;
+	text-decoration: none;
+}
+
+@keyframes shake {
+	0% {
+		transform: rotate(1deg);
+	}
+	20% {
+		transform: rotate(-1deg);
+	}
+	40% {
+		transform: rotate(1deg);
+	}
+	60% {
+		transform: rotate(-1deg);
+	}
+	80% {
+		transform: rotate(1deg);
+	}
+	100% {
+		transform: rotate(0deg);
+	}
+}
+
+.animate:before,
+.animate:after {
+	position: absolute;
+	content: "";
+	display: block;
+	width: 140%;
+	height: 100%;
+	left: -20%;
+	z-index: -1000;
+	transition: all ease-in-out 0.5s;
+	background-repeat: no-repeat;
+}
+
+.animate:before {
+	display: none;
+	top: -75%;
+	background-image: radial-gradient(circle, #731cff 20%, transparent 20%),
+		radial-gradient(circle, transparent 20%, #731cff 20%, transparent 30%),
+		radial-gradient(circle, #731cff 20%, transparent 20%),
+		radial-gradient(circle, #731cff 20%, transparent 20%),
+		radial-gradient(circle, transparent 10%, #731cff 15%, transparent 20%),
+		radial-gradient(circle, #731cff 20%, transparent 20%),
+		radial-gradient(circle, #731cff 20%, transparent 20%),
+		radial-gradient(circle, #731cff 20%, transparent 20%),
+		radial-gradient(circle, #731cff 20%, transparent 20%);
+	background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%,
+		10% 10%, 18% 18%;
+}
+
+.animate:after {
+	display: none;
+	bottom: -75%;
+	background-image: radial-gradient(circle, #731cff 20%, transparent 20%),
+		radial-gradient(circle, #731cff 20%, transparent 20%),
+		radial-gradient(circle, transparent 10%, #731cff 15%, transparent 20%),
+		radial-gradient(circle, #731cff 20%, transparent 20%),
+		radial-gradient(circle, #731cff 20%, transparent 20%),
+		radial-gradient(circle, #731cff 20%, transparent 20%),
+		radial-gradient(circle, #731cff 20%, transparent 20%);
+	background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%;
+}
+
+.animate:before {
+	display: block;
+	animation: topBubbles ease-in-out 1s forwards;
+}
+
+.animate:after {
+	display: block;
+	animation: bottomBubbles ease-in-out 1s forwards;
+}
+
+@keyframes topBubbles {
+	0% {
+		background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,
+			40% 90%, 55% 90%, 70% 90%;
+	}
+	50% {
+		background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%,
+			50% 50%, 65% 20%, 90% 30%;
+	}
+	100% {
+		background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%,
+			50% 40%, 65% 10%, 90% 20%;
+		background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+	}
+}
+
+@keyframes bottomBubbles {
+	0% {
+		background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%,
+			70% -10%, 70% 0%;
+	}
+	50% {
+		background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%,
+			105% 0%;
+	}
+	100% {
+		background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%,
+			110% 10%;
+		background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+	}
 }
