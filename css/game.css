@@ -1,3 +1,5 @@
+@import url("./modal.css");
+
 .scoreline {
 	width: 90%;
 	margin: 0 auto;
@@ -29,12 +31,21 @@ h4 {
 	margin: 0 auto;
 	border-radius: 8px;
 	background-color: rgba(255, 255, 255, 0.1);
-	padding: 40px 5px;
+	padding: 40px 0;
 }
 .card__question {
+	width: 80%;
+	margin: 0 auto;
 	margin-bottom: 15px;
 }
+@media screen and (max-width: 568px) {
+	.card__question {
+		font-size: 2.5rem;
+	}
+}
 .card__answer {
+	display: flex;
+	align-items: center;
 	width: 80%;
 	margin: 0 auto;
 	margin-bottom: 10px;
@@ -51,8 +62,11 @@ h4 {
 	.card__answer {
 		width: 95%;
 	}
+	.card__answer {
+		font-size: 1.4rem;
+	}
 }
-.card__answer span {
+.card__answer .answer-letter {
 	display: inline-block;
 	height: 100%;
 	color: #fff;
@@ -66,13 +80,13 @@ h4 {
 .card__answer:hover {
 	background-color: #e6e6e6;
 }
-.card__answer:hover span {
+.card__answer:hover .answer-letter {
 	background-color: rgb(138, 131, 255);
 }
 .card__answer.active {
 	box-shadow: 0 0 30px rgb(175, 95, 255);
 }
-.card__answer.active span {
+.card__answer.active .answer-letter {
 	background-color: rgb(34, 123, 206);
 }
 .card__answer.active.wrong {
@@ -87,6 +101,10 @@ h4 {
 .card__answer.wrong {
 	color: #fff;
 	background-color: rgb(225, 22, 22);
+}
+.card__answer.prompt {
+	transform: translateY(-3px);
+	box-shadow: 0 0 20px rgb(106, 77, 121);
 }
 .card__answer.invisible {
 	transition: opacity 0.5s ease;
@@ -113,6 +131,12 @@ h4 {
 }
 .btn-grad {
 	margin: 0;
+}
+@media screen and (max-width: 568px) {
+	.btn-grad {
+		font-size: 16px;
+		min-width: 150px;
+	}
 }
 .btn-option.not-available {
 	background-image: linear-gradient(
@@ -154,19 +178,34 @@ h4 {
 
 @keyframes shake {
 	0% {
-		transform: rotate(1deg);
+		transform: rotate(0.5deg);
+	}
+	10% {
+		transform: rotate(-0.5deg);
 	}
 	20% {
-		transform: rotate(-1deg);
+		transform: rotate(0.5deg);
+	}
+	30% {
+		transform: rotate(-0.5deg);
 	}
 	40% {
-		transform: rotate(1deg);
+		transform: rotate(0.5deg);
+	}
+	50% {
+		transform: rotate(-0.5deg);
 	}
 	60% {
-		transform: rotate(-1deg);
+		transform: rotate(0.5deg);
+	}
+	70% {
+		transform: rotate(-0.5deg);
 	}
 	80% {
-		transform: rotate(1deg);
+		transform: rotate(0.5deg);
+	}
+	90% {
+		transform: rotate(-0.5deg);
 	}
 	100% {
 		transform: rotate(0deg);

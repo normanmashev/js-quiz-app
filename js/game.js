@@ -12,70 +12,101 @@ document.addEventListener("DOMContentLoaded", () => {
 	setNextQuestion();
 });
 
-const rand = () => {
+function getRand() {
 	let min = 0,
 		max = 3;
 	return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+}
 
-const getTextContent = e => {
-	return e.textContent.substring(1, e.textContent.length);
-};
+function getTextContent(e) {
+	return e.getElementsByClassName("answer-text")[0].textContent;
+}
 
-const applyFifty = () => {
-	const options = Array.from(document.querySelectorAll(".card__answer"));
-	let randIdx = rand();
+function getWidth() {
+	return Math.round((curIndex * 100) / questions.length);
+}
+
+function getCardAnswers() {
+	return Array.from(document.getElementsByClassName("card__answer"));
+}
+
+function disableButton(id) {
+	const btn = document.getElementById(id);
+	btn.classList.remove("available");
+	btn.classList.add("not-available");
+}
+
+function applyFifty() {
+	const options = getCardAnswers();
+	let randIdx = getRand();
 
 	while (getTextContent(options[randIdx]) === curQuest.correct_answer) {
-		randIdx = rand();
+		randIdx = getRand();
 	}
 
 	options.forEach((e, i) => {
 		if (getTextContent(e) === curQuest.correct_answer || i === randIdx) {
-		} else {
-			e.classList.add("invisible");
+			return;
 		}
+		e.classList.add("invisible");
 	});
 
-	const btn = document.querySelector("#fiftyBtn");
-	btn.classList.remove("available");
-	btn.classList.add("not-available");
-
+	disableButton("fiftyBtn");
 	fiftyOption = false;
-};
+}
 
-const applySkip = () => {
-	const options = Array.from(document.querySelectorAll(".card__answer"));
+function applySkip() {
+	const options = getCardAnswers();
 
 	const correct = options.find(
 		e => getTextContent(e) === curQuest.correct_answer
 	);
+
 	correct.classList.add("active");
 
-	showAnswer();
-
-	const btn = document.querySelector("#skipBtn");
-	btn.classList.remove("available");
-	btn.classList.add("not-available");
-
+	disableButton("skipBtn");
 	skipOption = false;
-};
 
-const finishGame = () => {};
+	showAnswer();
+}
+
+function showModal() {
+	const modal = document.getElementById("modal");
+	const score = document.getElementById("modal-score");
+	const close = document.getElementById("modal-closebtn");
+	const ANIMATION_SPEED = 400; // ms
+
+	score.innerHTML = `${curScore}`;
+
+	modal.classList.add("open");
+
+	close.addEventListener("click", () => {
+		modal.classList.remove("open");
+		modal.classList.add("close");
+
+		setTimeout(() => {
+			modal.classList.remove("close");
+		}, ANIMATION_SPEED);
+	});
+}
+
+function finishGame() {
+	showModal();
+}
 
 function showAnswer() {
-	const options = Array.from(document.getElementsByClassName("card__answer"));
+	const options = getCardAnswers();
 
 	options.forEach(e => {
 		const text = getTextContent(e);
 
-		if (text === curQuest.correct_answer) {
-			e.classList.add("correct");
-		} else {
-			e.classList.add("wrong");
+		if (text !== curQuest.correct_answer) {
+			return e.classList.add("wrong");
 		}
 
-		if (e.classList.contains("active") && e.classList.contains("correct")) {
+		e.classList.add("correct");
+
+		if (e.classList.contains("active")) {
 			e.classList.add("animate");
 		}
 	});
@@ -92,89 +123,105 @@ function showAnswer() {
 	}, 2000);
 }
 
-function answerBtnListener() {
-	const options = Array.from(document.getElementsByClassName("card__answer"));
+function promptToAnswer() {
+	const options = getCardAnswers();
 
-	options.forEach(e => {
-		if (e.classList.contains("active")) {
-			const text = getTextContent(e);
+	const removePropmtClass = () => {
+		options.forEach(e => e.classList.remove("prompt"));
+	};
 
-			if (text === curQuest.correct_answer) {
-				curScore += 10;
-			}
+	options.forEach(e => e.classList.add("prompt"));
 
-			showAnswer();
-		}
-	});
+	setTimeout(removePropmtClass, 1000);
+}
+
+function onAnswer() {
+	const options = getCardAnswers();
+
+	const active = options.find(e => e.classList.contains("active"));
+
+	if (!active) {
+		return promptToAnswer();
+	}
+
+	const activeText = getTextContent(active);
+
+	if (activeText === curQuest.correct_answer) {
+		curScore += 10;
+	}
+
+	showAnswer();
 }
 
 function setScore() {
 	const scoreline = document.getElementById("scoreline");
-	curWidth = Math.round((curIndex * 100) / questions.length);
+	const curWidth = getWidth();
 
 	scoreline.innerHTML = "";
-	scoreline.innerHTML = `<div class="progress flex flex-center flex-column">
-  <h5>${curIndex}/${questions.length}</h5>
-  <div class="progress__border">
-    <div
-      class="progress__border-color"
-      style="height: 24px; width: ${curWidth}%"
-    ></div>
+	scoreline.innerHTML = `
+  <div class="progress flex flex-center flex-column">
+    <h5>${curIndex}/${questions.length}</h5>
+    <div class="progress__border">
+      <div class="progress__border-color" style="height: 24px; width: ${curWidth}%"></div>
+    </div>
   </div>
-</div>
-<div class="score flex flex-center flex-column">
-  <h5>Score</h5>
-  <h3>${curScore}</h3>
-</div>`;
+  <div class="score flex flex-center flex-column">
+    <h5>Score</h5>
+    <h3>${curScore}</h3>
+  </div>`;
 }
 
 function setButtons() {
+	const fifty = fiftyOption ? "available" : "not-available";
+	const skip = skipOption ? "available" : "not-available";
+	const main = curIndex === questions.length ? "Finish" : "Answer";
+
 	card.innerHTML += `<div class="options">
-  <span id="fiftyBtn" class="btn-option ${
-		fiftyOption ? "available" : "not-available"
-	}"
-  onclick="applyFifty()"
-  >50/50</span>
-  <div class="btn-grad" onclick="answerBtnListener()">${
-		curIndex === questions.length - 1 ? "Finish" : "Answer"
-	}</div>
-  <span id="skipBtn" class="btn-option ${
-		skipOption ? "available" : "not-available"
-	}"
-  onclick="applySkip()"
-  >Skip</span>
-</div>`;
+    <span id="fiftyBtn" class="btn-option ${fifty}" onclick="applyFifty()">50/50</span>
+    <div class="btn-grad" onclick="onAnswer()">${main}</div>
+    <span id="skipBtn" class="btn-option ${skip}" onclick="applySkip()">Skip</span>
+  </div>`;
+}
+
+function setListeners() {
+	const options = getCardAnswers();
+
+	options.forEach(e =>
+		e.addEventListener("click", () => {
+			const currentActive = options.find(c => c.classList.contains("active"));
+
+			if (currentActive) {
+				currentActive.classList.remove("active");
+			}
+
+			e.classList.add("active");
+		})
+	);
 }
 
 function setNextQuestion() {
 	curQuest = questions[curIndex];
+	curIndex++;
 
-	const randIdx = rand();
+	const randIdx = getRand();
 	let options = [...curQuest.incorrect_answers];
+
 	options.splice(randIdx, 0, curQuest.correct_answer);
 
 	card.innerHTML = "";
-	card.innerHTML += `<h4 id="card-question" class="card__question">${curQuest.question}</h4>`;
+	card.innerHTML += `
+    <h4 id="card-question" class="card__question">${curQuest.question}</h4>`;
+
 	options.forEach((e, i) => {
-		card.innerHTML += `<p class="card__answer"><span>${String.fromCharCode(
-			65 + i
-		)}</span>${e}</p>`;
+		const letter = String.fromCharCode(65 + i);
+
+		card.innerHTML += `
+    <p class="card__answer">
+      <span class="answer-letter">${letter}</span>
+      <span class="answer-text">${e}</span>
+    </p>`;
 	});
 
 	setButtons();
-	curIndex++;
-	addListeners();
-}
-
-function addListeners() {
-	const options = Array.from(document.getElementsByClassName("card__answer"));
-
-	options.forEach(e =>
-		e.addEventListener("click", () => {
-			Array.from(options).forEach(c => {
-				c.classList.remove("active");
-			});
-			e.classList.add("active");
-		})
-	);
+	setListeners();
 }
