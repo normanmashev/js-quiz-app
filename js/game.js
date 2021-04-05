@@ -80,14 +80,20 @@ function showModal() {
 
 	modal.classList.add("open");
 
-	close.addEventListener("click", () => {
+	const closeCallback = async () => {
 		modal.classList.remove("open");
 		modal.classList.add("close");
 
-		setTimeout(() => {
+		await setTimeout(() => {
 			modal.classList.remove("close");
 		}, ANIMATION_SPEED);
-	});
+
+		setTimeout(() => {
+			location.href = "/";
+		}, 1000);
+	};
+
+	close.addEventListener("click", closeCallback);
 }
 
 function finishGame() {
