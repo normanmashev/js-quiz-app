@@ -2,6 +2,7 @@ let curQuest;
 let curWidth = 0;
 let curScore = 0;
 let curIndex = 0;
+let curAnswer;
 let skipOption = true;
 let fiftyOption = true;
 const questions = JSON.parse(localStorage.getItem("questions"));
@@ -36,70 +37,6 @@ function disableButton(id) {
 	btn.classList.add("not-available");
 }
 
-function applyFifty() {
-	const options = getCardAnswers();
-	let randIdx = getRand();
-
-	while (getTextContent(options[randIdx]) === curQuest.correct_answer) {
-		randIdx = getRand();
-	}
-
-	options.forEach((e, i) => {
-		if (getTextContent(e) === curQuest.correct_answer || i === randIdx) {
-			return;
-		}
-		e.classList.add("invisible");
-	});
-
-	disableButton("fiftyBtn");
-	fiftyOption = false;
-}
-
-function applySkip() {
-	const options = getCardAnswers();
-
-	const correct = options.find(
-		e => getTextContent(e) === curQuest.correct_answer
-	);
-
-	correct.classList.add("active");
-
-	disableButton("skipBtn");
-	skipOption = false;
-
-	showAnswer();
-}
-
-function showModal() {
-	const modal = document.getElementById("modal");
-	const score = document.getElementById("modal-score");
-	const close = document.getElementById("modal-closebtn");
-	const ANIMATION_SPEED = 400; // ms
-
-	score.innerHTML = `${curScore}`;
-
-	modal.classList.add("open");
-
-	const closeCallback = async () => {
-		modal.classList.remove("open");
-		modal.classList.add("close");
-
-		await setTimeout(() => {
-			modal.classList.remove("close");
-		}, ANIMATION_SPEED);
-
-		setTimeout(() => {
-			location.href = "/";
-		}, 1000);
-	};
-
-	close.addEventListener("click", closeCallback);
-}
-
-function finishGame() {
-	showModal();
-}
-
 function showAnswer() {
 	const options = getCardAnswers();
 
@@ -129,6 +66,70 @@ function showAnswer() {
 	}, 2000);
 }
 
+function applyFifty() {
+	const options = getCardAnswers();
+	let randIdx = getRand();
+
+	while (curAnswer === randIdx) {
+		randIdx = getRand();
+	}
+
+	options.forEach((e, i) => {
+		if (i === curAnswer || i === randIdx) {
+			return;
+		}
+		e.classList.add("invisible");
+	});
+
+	disableButton("fiftyBtn");
+	fiftyOption = false;
+}
+
+function applySkip() {
+	const options = getCardAnswers();
+
+	const correct = options.find(
+		e => getTextContent(e) === curQuest.correct_answer
+	);
+
+	correct.classList.add("active");
+
+	disableButton("skipBtn");
+	skipOption = false;
+
+	onAnswer();
+}
+
+function showModal() {
+	const modal = document.getElementById("modal");
+	const score = document.getElementById("modal-score");
+	const close = document.getElementById("modal-closebtn");
+	const ANIMATION_SPEED = 400; // ms
+
+	score.innerHTML = `${curScore}`;
+
+	modal.classList.add("open");
+
+	const closeCallback = async () => {
+		modal.classList.remove("open");
+		modal.classList.add("close");
+
+		await setTimeout(() => {
+			modal.classList.remove("close");
+		}, ANIMATION_SPEED);
+
+		setTimeout(() => {
+			location.href = "/";
+		}, 1000);
+	};
+
+	close.addEventListener("click", closeCallback);
+}
+
+function finishGame() {
+	setTimeout(() => showModal(), 1000);
+}
+
 function promptToAnswer() {
 	const options = getCardAnswers();
 
@@ -144,15 +145,13 @@ function promptToAnswer() {
 function onAnswer() {
 	const options = getCardAnswers();
 
-	const active = options.find(e => e.classList.contains("active"));
+	const activeIndex = options.findIndex(e => e.classList.contains("active"));
 
-	if (!active) {
+	if (activeIndex === -1) {
 		return promptToAnswer();
 	}
 
-	const activeText = getTextContent(active);
-
-	if (activeText === curQuest.correct_answer) {
+	if (activeIndex === curAnswer) {
 		curScore += 10;
 	}
 
@@ -209,10 +208,15 @@ function setNextQuestion() {
 	curQuest = questions[curIndex];
 	curIndex++;
 
-	const randIdx = getRand();
+	curAnswer = getRand();
 	let options = [...curQuest.incorrect_answers];
 
-	options.splice(randIdx, 0, curQuest.correct_answer);
+	options.splice(curAnswer, 0, curQuest.correct_answer);
+
+	card.classList.remove("slide-in");
+	setTimeout(() => {
+		card.classList.add("slide-in");
+	}, 100);
 
 	card.innerHTML = "";
 	card.innerHTML += `
