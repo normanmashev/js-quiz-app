@@ -9,3 +9,5 @@ Vanilla JS Quiz application made with the Open Trivia Database API
 * Choose the level of **difficulty** from Easy to Hard
 * Choose the **type** of questions: *True/False* or *Multiple Choice*
 * Two types of tips during the quiz: *50/50* and *Skip the question*
+* In the page **Settings** player can change his name
+* Highscores table contains the top 10 best player results
