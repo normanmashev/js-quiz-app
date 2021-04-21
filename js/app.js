@@ -33,6 +33,12 @@ const startGame = async () => {
 	try {
 		const url = createApiUrl();
 		const questions = await getQuestions(url);
+
+		if (!questions.length) {
+			showToast();
+			return;
+		}
+
 		localStorage.setItem("questions", JSON.stringify(questions));
 		location.href = "game.html";
 	} catch (error) {

@@ -133,31 +133,26 @@ h1 {
 	box-shadow: 0 0 13px #eee;
 }
 
-/* BACKGROUND IMAGE */
-.bg-img {
-	position: absolute;
-	bottom: 3%;
-	left: 50%;
-	max-width: 300px;
-	transform: translateX(-50%);
-	transition: all 0.4s ease-in-out;
+.icons {
+	display: flex;
+	justify-content: space-between;
+	min-width: 200px;
 }
 
-.bg-img:hover {
-	transform: translateX(-50%) scale(1.04);
+.btn-icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-width: 40px;
 }
-
-@media screen and (max-width: 568px) {
-	.bg-img {
-		max-width: 250px;
-	}
+.btn-icon img {
+	width: 30px;
+	margin: 0;
+	transition: transform 0.4s ease;
 }
-@media screen and (max-height: 568px) {
-	.bg-img {
-		max-width: 200px;
-	}
+.btn-icon:hover img {
+	transform: scale(1.1);
 }
-
 /* FORM INPUT */
 .form,
 .form__group {

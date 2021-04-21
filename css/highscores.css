@@ -1,0 +1,20 @@
+table {
+	width: 100%;
+	margin-bottom: 40px;
+}
+tr {
+	transition: background 0.4s ease;
+}
+tbody:nth-child(odd) {
+	background: rgba(255, 255, 255, 0.2);
+	border-radius: 10px;
+}
+tr:hover {
+	background: rgba(255, 255, 255, 0.3);
+}
+
+th,
+td {
+	font-size: 2.3rem;
+	width: 33.3333%;
+}

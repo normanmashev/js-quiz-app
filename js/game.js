@@ -13,14 +13,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	setNextQuestion();
 });
 
-function getRand() {
-	let min = 0,
-		max = 3;
+function getRand(min = 0, max = 3) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getTextContent(e) {
-	return e.getElementsByClassName("answer-text")[0].textContent;
+function getActiveAnswer(options) {
+	return options.findIndex(e => e.classList.contains("active"));
 }
 
 function getWidth() {
@@ -37,13 +35,15 @@ function disableButton(id) {
 	btn.classList.add("not-available");
 }
 
-function showAnswer() {
-	const options = getCardAnswers();
+function disableAllButtons(id) {
+	disableButton("answerBtn");
+	disableButton("fiftyBtn");
+	disableButton("skipBtn");
+}
 
-	options.forEach(e => {
-		const text = getTextContent(e);
-
-		if (text !== curQuest.correct_answer) {
+function showWrongsAnswers(options) {
+	options.forEach((e, i) => {
+		if (i !== curAnswer) {
 			return e.classList.add("wrong");
 		}
 
@@ -53,6 +53,12 @@ function showAnswer() {
 			e.classList.add("animate");
 		}
 	});
+}
+function showAnswer() {
+	const options = getCardAnswers();
+
+	disableAllButtons();
+	showWrongsAnswers(options);
 
 	setScore();
 
@@ -88,9 +94,7 @@ function applyFifty() {
 function applySkip() {
 	const options = getCardAnswers();
 
-	const correct = options.find(
-		e => getTextContent(e) === curQuest.correct_answer
-	);
+	const correct = options[curAnswer];
 
 	correct.classList.add("active");
 
@@ -120,13 +124,31 @@ function showModal() {
 
 		setTimeout(() => {
 			location.href = "/";
-		}, 1000);
+		}, 500);
 	};
 
 	close.addEventListener("click", closeCallback);
 }
 
+function addScore() {
+	let scores = JSON.parse(localStorage.getItem("highscores")) || [];
+	let name = localStorage.getItem("playername") || "You";
+	let newScore = { name, score: curScore };
+
+	if (scores.length < 10) {
+		scores.push(newScore);
+	} else if (scores[9].score < curScore) {
+		scores[9] = newScore;
+	}
+
+	scores.sort((a, b) => a.score < b.score);
+
+	let json = JSON.stringify(scores);
+	localStorage.setItem("highscores", json);
+}
+
 function finishGame() {
+	addScore();
 	setTimeout(() => showModal(), 1000);
 }
 
@@ -145,7 +167,7 @@ function promptToAnswer() {
 function onAnswer() {
 	const options = getCardAnswers();
 
-	const activeIndex = options.findIndex(e => e.classList.contains("active"));
+	const activeIndex = getActiveAnswer(options);
 
 	if (activeIndex === -1) {
 		return promptToAnswer();
@@ -183,7 +205,7 @@ function setButtons() {
 
 	card.innerHTML += `<div class="options">
     <span id="fiftyBtn" class="btn-option ${fifty}" onclick="applyFifty()">50/50</span>
-    <div class="btn-grad" onclick="onAnswer()">${main}</div>
+    <div id="answerBtn" class="btn-grad" onclick="onAnswer()">${main}</div>
     <span id="skipBtn" class="btn-option ${skip}" onclick="applySkip()">Skip</span>
   </div>`;
 }
@@ -208,7 +230,12 @@ function setNextQuestion() {
 	curQuest = questions[curIndex];
 	curIndex++;
 
-	curAnswer = getRand();
+	if (curQuest.type === "boolean") {
+		curAnswer = getRand(0, 1);
+	} else {
+		curAnswer = getRand();
+	}
+
 	let options = [...curQuest.incorrect_answers];
 
 	options.splice(curAnswer, 0, curQuest.correct_answer);
