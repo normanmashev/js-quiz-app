@@ -132,16 +132,18 @@ function showModal() {
 
 function addScore() {
 	let scores = JSON.parse(localStorage.getItem("highscores")) || [];
-	let name = localStorage.getItem("playername") || "You";
+	let name = localStorage.getItem("playername") || "Anonymous";
 	let newScore = { name, score: curScore };
 
 	if (scores.length < 10) {
 		scores.push(newScore);
-	} else if (scores[9].score < curScore) {
-		scores[9] = newScore;
+	} else {
+		const idx = scores.findIndex(e => e.score < newScore.score);
+		scores.splice(idx, 0, newScore);
+		scores.pop();
 	}
 
-	scores.sort((a, b) => a.score < b.score);
+	scores.sort((a, b) => +b.score - +a.score);
 
 	let json = JSON.stringify(scores);
 	localStorage.setItem("highscores", json);
